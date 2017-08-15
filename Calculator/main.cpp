@@ -32,6 +32,7 @@ double ParseExpression(std::string input) {
 
 	for (int i = 0; i < size; i++) {
 		char key = input[i];
+		if (key == 32) continue;
 		if (key > 47 && key < 58) // Key is pointing to a number in the ACSII table
 		{
 			tmp_numbers.push_back(key - 48);
@@ -97,20 +98,21 @@ void Oppgave3() {
 	std::cout << std::endl << "Evaluer uttrykket: " << sInput << std::endl;
 	double sum = ParseExpression(std::string(sInput));
 	
-	std::cout << std::endl << "Svaret er " << sum;
+	std::cout << std::endl << "Svaret er " << sInput << sum << std::endl;
 }
 
 int main(void)
 {
 
-	/*std::cout << "Oppgave 1: Skriv inn et tall, enter, en operator, enter, og et nytt tall" << std::endl;
+	std::cout << "Oppgave 1: Skriv inn et tall, enter, en operator, enter, og et nytt tall" << std::endl;
 	Oppgave1();
 	std::cout << "Oppgave 2: Skriv et uttrykk pa en linje, eks: 1+2, eller 1 + 2" << std::endl;
 	Oppgave2();
-	std::cout << "Oppgave 3:" << std::endl;*/
+	std::cout << "Oppgave 3:" << std::endl;
+	std::cin.get();
 	Oppgave3();
 
-
-	system("PAUSE");
+	std::cout << std::endl << "Press enter to get a beer...";
+	std::cin.get();
 	return 0;
 }
