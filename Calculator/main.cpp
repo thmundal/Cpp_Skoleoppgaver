@@ -33,10 +33,13 @@ double doOperation(char op, double a, double b) {
 	return _op(a, b);
 }
 
-double make_number(std::vector<double> c) {
+/*
+	Added support for decimal points, cred goes to Nils
+*/
+double make_number(std::vector<double> c, int decimal_point = 0) {
 	double n = 0;
 	for (int i = 0; i < c.size(); i++) {
-		n += c[c.size() - 1 - i] * pow(10, i);
+		n += c[c.size() - 1 - i] * pow(10, i - decimal_point);
 	}
 	return n;
 }
@@ -46,20 +49,38 @@ double ParseExpression(std::string input) {
 	std::vector<double> numbers;
 	std::vector<double> tmp_numbers;
 
-	int size = input.length(); // strlen(input);
+	int size = input.length();
+	bool decimal = false;
+	double decimal_sum = 0;
+	int decimal_points = 0;
 
 	for (int i = 0; i < size; i++) {
 		char key = input[i];
 		if (key == 32) continue;
+
+		if (key == 46 || key == 44) {
+			if (decimal) {
+				std::cout << "Received too many decimal points, assuming continuation of number";
+			}
+			decimal = true;
+			continue;
+		}
+
 		if (key > 47 && key < 58) // Key is pointing to a number in the ACSII table
 		{
+			if (decimal) {
+				decimal_points++;
+			}
+
 			tmp_numbers.push_back(key - 48);
 			
 			std::cout << key - 48;
 		}
 		else {
 			// Fix the numbers
-			double n = make_number(tmp_numbers);
+			double n = make_number(tmp_numbers, decimal_points);
+			decimal = false;
+			decimal_points = 0;
 			
 			tmp_numbers.clear();
 			numbers.push_back(n);
@@ -74,9 +95,6 @@ double ParseExpression(std::string input) {
 
 	double sum = 0;
 	
-	std::vector<int> operator_order;
-	std::vector<double> numbers_order;
-
 	// Todo: Implement support for exponents
 	for (int i = 0; i<operators.size(); i++) {
 		if (operators[i] == '^') {
@@ -131,6 +149,7 @@ void Oppgave3() {
 	while ((cInput = std::cin.get()) != '\n') {
 		sInput += cInput;
 	}
+
 	sInput += "=";
 
 	std::cout << std::endl << "Evaluer uttrykket: " << sInput << std::endl;
