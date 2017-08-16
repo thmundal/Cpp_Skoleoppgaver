@@ -4,6 +4,16 @@
 #include <vector>
 #include <string>
 
+#include "Output.h"
+
+bool is_operator(char op) {
+	const std::string valid = "+-*/";
+	for (char c : valid) {
+		if (op == c) return true;
+	}
+	return false;
+}
+
 double doOperation(char op, double a, double b) {
 	std::function<double(double, double)> _op;
 
@@ -14,12 +24,21 @@ double doOperation(char op, double a, double b) {
 	case '-': _op = std::minus<float>(); break;
 	case '*': _op = std::multiplies<float>(); break;
 	case '/': _op = std::divides<float>(); break;
+	case '^': _op = [](double a, double b) { return pow(a, b); }; break;
 	default:
-		fprintf(stderr, "Unsupported operator: %c");
+		Output::error("Unsupported operator: %c %d\n", op, op);
 		return 0;
 	}
 
 	return _op(a, b);
+}
+
+double make_number(std::vector<double> c) {
+	double n = 0;
+	for (int i = 0; i < c.size(); i++) {
+		n += c[c.size() - 1 - i] * pow(10, i);
+	}
+	return n;
 }
 
 double ParseExpression(std::string input) {
@@ -28,7 +47,6 @@ double ParseExpression(std::string input) {
 	std::vector<double> tmp_numbers;
 
 	int size = input.length(); // strlen(input);
-	int delimiter = 0;
 
 	for (int i = 0; i < size; i++) {
 		char key = input[i];
@@ -41,14 +59,10 @@ double ParseExpression(std::string input) {
 		}
 		else {
 			// Fix the numbers
-			double n = 0;
-			for (int i = 0; i < tmp_numbers.size(); i++) {
-				n += tmp_numbers[tmp_numbers.size() - 1 - i] * pow(10, i);
-			}
+			double n = make_number(tmp_numbers);
+			
 			tmp_numbers.clear();
 			numbers.push_back(n);
-			//std::cout << std::endl << "Legg til tall " << n << std::endl;
-			//std::cout << "Input er " << key;
 
 			// Key is not pointing to a number, assume operator
 			char cOperator = char(key);
@@ -57,11 +71,35 @@ double ParseExpression(std::string input) {
 			operators.push_back(cOperator);
 		}
 	}
-	// 1+2+3
+
 	double sum = 0;
+	
+	std::vector<int> operator_order;
+	std::vector<double> numbers_order;
+
+	// Todo: Implement support for exponents
+	for (int i = 0; i<operators.size(); i++) {
+		if (operators[i] == '^') {
+			double sum = doOperation(operators[i], numbers[i], numbers[i + 1]);
+			numbers[i] = 1;
+			numbers[i + 1] = sum;
+			operators[i] = '*';
+		}
+	}
+
+	// Do multiplication operators first
+	for(int i=0; i<operators.size(); i++) {
+		if (operators[i] == '*' || operators[i] == '/') {
+			double sum = doOperation(operators[i], numbers[i], numbers[i + 1]);
+			numbers[i] = 0;
+			numbers[i + 1] = sum;
+			operators[i] = '+';
+		}
+	}
+
+	// Sum all numbers
 	char last_operator = '+';
 	for (int i = 0; i < numbers.size(); i++) {
-		//std::cout << std::endl << " gjør operasjon på " << numbers[i] << std::endl;
 		sum = doOperation(last_operator, sum, numbers[i]);
 
 		if(i < numbers.size())
@@ -79,7 +117,7 @@ void Oppgave1() {
 	std::cin >> cOperator;
 	std::cin >> dInput_b;
 
-	std::cout << doOperation(cOperator, dInput_a, dInput_b);
+	std::cout << "svaret er " << doOperation(cOperator, dInput_a, dInput_b) << std::endl;
 }
 
 void Oppgave2() {
@@ -104,15 +142,18 @@ void Oppgave3() {
 int main(void)
 {
 
-	std::cout << "Oppgave 1: Skriv inn et tall, enter, en operator, enter, og et nytt tall" << std::endl;
+	Output::message("Oppgave 1: Skriv inn et tall, enter, en operator, enter, og et nytt tall\n");
 	Oppgave1();
-	std::cout << "Oppgave 2: Skriv et uttrykk pa en linje, eks: 1+2, eller 1 + 2" << std::endl;
+	
+	Output::message("Oppgave 2: Skriv et uttrykk pa en linje, eks: 1+2, eller 1 + 2\n");
 	Oppgave2();
-	std::cout << "Oppgave 3:" << std::endl;
+
 	std::cin.get();
+
+	Output::message("Oppgave 3: Skriv inn et uttrykk som inneholder flere operatorer\n");
 	Oppgave3();
 
-	std::cout << std::endl << "Press enter to get a beer...";
+	Output::message("Press enter to get a beer...\n");
 	std::cin.get();
 	return 0;
 }
