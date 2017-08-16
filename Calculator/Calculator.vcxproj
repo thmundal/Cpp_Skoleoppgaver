@@ -111,7 +111,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Expression.cpp" />
+    <ClCompile Include="ExpressionQueue.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Ouput.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Expression.h" />
+    <ClInclude Include="ExpressionQueue.h" />
+    <ClInclude Include="Output.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
