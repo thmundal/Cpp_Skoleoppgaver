@@ -3,8 +3,12 @@
 #include <conio.h>
 #include <vector>
 #include <string>
+#include <sstream>
 
 #include "Output.h"
+#include "ExpressionGroup.h"
+
+double ParseExpression();
 
 bool is_operator(char op) {
 	const std::string valid = "+-*/";
@@ -44,6 +48,27 @@ double make_number(std::vector<double> c, int decimal_point = 0) {
 	return n;
 }
 
+double make_groups(std::string input) { //, ExpressionGroup* root) {
+	std::string expression = "";
+	double sum = 0;
+
+	for (int i = 0; i < input.length(); i++) {
+		char c = input[i];
+		if (c == 40) {
+			//sum += ParseExpression(input.substr(i, input.length()));
+			// root->add_child(&ExpressionGroup(make_groups(input.substr(i, input.length()), root)));
+		}
+		else if (c == 41) {
+			return sum;
+			//return expression;
+		}
+
+		expression += c;
+	}
+
+	return sum;
+}
+
 double ParseExpression(std::string input) {
 	std::vector<char> operators;
 	std::vector<double> numbers;
@@ -53,6 +78,7 @@ double ParseExpression(std::string input) {
 	bool decimal = false;
 	double decimal_sum = 0;
 	int decimal_points = 0;
+	double sum = 0;
 
 	for (int i = 0; i < size; i++) {
 		char key = input[i];
@@ -65,7 +91,6 @@ double ParseExpression(std::string input) {
 			decimal = true;
 			continue;
 		}
-
 		if (key > 47 && key < 58) // Key is pointing to a number in the ACSII table
 		{
 			if (decimal) {
@@ -73,7 +98,7 @@ double ParseExpression(std::string input) {
 			}
 
 			tmp_numbers.push_back(key - 48);
-			
+
 			std::cout << key - 48;
 		}
 		else {
@@ -81,19 +106,19 @@ double ParseExpression(std::string input) {
 			double n = make_number(tmp_numbers, decimal_points);
 			decimal = false;
 			decimal_points = 0;
-			
+
 			tmp_numbers.clear();
 			numbers.push_back(n);
 
 			// Key is not pointing to a number, assume operator
 			char cOperator = char(key);
 			std::cout << cOperator;
-			
+
 			operators.push_back(cOperator);
 		}
+		
 	}
 
-	double sum = 0;
 	
 	// Todo: Implement support for exponents
 	for (int i = 0; i<operators.size(); i++) {
@@ -120,7 +145,7 @@ double ParseExpression(std::string input) {
 	for (int i = 0; i < numbers.size(); i++) {
 		sum = doOperation(last_operator, sum, numbers[i]);
 
-		if(i < numbers.size())
+		if(i < numbers.size() - 1)
 			last_operator = operators[i];
 	}
 

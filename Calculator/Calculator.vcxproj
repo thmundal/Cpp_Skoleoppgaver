@@ -112,12 +112,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Expression.cpp" />
+    <ClCompile Include="ExpressionGroup.cpp" />
     <ClCompile Include="ExpressionQueue.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Ouput.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Expression.h" />
+    <ClInclude Include="ExpressionGroup.h" />
     <ClInclude Include="ExpressionQueue.h" />
     <ClInclude Include="Output.h" />
   </ItemGroup>
