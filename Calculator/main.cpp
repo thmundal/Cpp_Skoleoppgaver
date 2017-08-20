@@ -8,7 +8,7 @@
 #include "Output.h"
 #include "ExpressionGroup.h"
 
-double ParseExpression();
+double ParseExpression(std::string in);
 
 bool is_operator(char op) {
 	const std::string valid = "+-*/";
@@ -48,26 +48,47 @@ double make_number(std::vector<double> c, int decimal_point = 0) {
 	return n;
 }
 
-double make_groups(std::string input) { //, ExpressionGroup* root) {
-	std::string expression = "";
-	double sum = 0;
 
+/*---------------------- PARATHESES GROUPING TEST ------------------------------*/
+
+std::string make_groups(std::string input) {
+	std::vector<ExpressionGroup> groups;
+	ExpressionGroup _root = ExpressionGroup();
+	ExpressionGroup* expression_pointer = nullptr;
+
+	if (expression_pointer == nullptr) {
+		expression_pointer = &_root;
+	}
+	
 	for (int i = 0; i < input.length(); i++) {
 		char c = input[i];
-		if (c == 40) {
-			//sum += ParseExpression(input.substr(i, input.length()));
-			// root->add_child(&ExpressionGroup(make_groups(input.substr(i, input.length()), root)));
-		}
-		else if (c == 41) {
-			return sum;
-			//return expression;
-		}
 
-		expression += c;
+		if (c == 40) {			// Open paratheses
+			ExpressionGroup* child = new ExpressionGroup();
+			expression_pointer->add_child(child);
+			expression_pointer = child;
+		}
+		else if (c == 41) {		// Close paratheses
+			double sum = ParseExpression(expression_pointer->expression + "=");
+
+			char buffer[10];
+			snprintf(buffer, sizeof(buffer), "%g", sum);
+
+			if (expression_pointer->parent != nullptr) {
+				expression_pointer->parent->append_char(buffer, "");
+				expression_pointer = expression_pointer->parent;
+			}
+		}
+		else {
+			expression_pointer->append_char(c);
+		}
 	}
 
-	return sum;
+	return expression_pointer->expression;
 }
+/*---------------------- PARATHESES GROUPING TEST END ------------------------------*/
+
+
 
 double ParseExpression(std::string input) {
 	std::vector<char> operators;
@@ -178,23 +199,23 @@ void Oppgave3() {
 	sInput += "=";
 
 	std::cout << std::endl << "Evaluer uttrykket: " << sInput << std::endl;
-	double sum = ParseExpression(std::string(sInput));
-	
+	double sum = ParseExpression(make_groups(std::string(sInput)));
+
 	std::cout << std::endl << "Svaret er " << sInput << sum << std::endl;
 }
 
 int main(void)
 {
 
-	Output::message("Oppgave 1: Skriv inn et tall, enter, en operator, enter, og et nytt tall\n");
+	/*Output::message("Oppgave 1: Skriv inn et tall, enter, en operator, enter, og et nytt tall\n");
 	Oppgave1();
 	
 	Output::message("Oppgave 2: Skriv et uttrykk pa en linje, eks: 1+2, eller 1 + 2\n");
 	Oppgave2();
 
 	std::cin.get();
-
-	Output::message("Oppgave 3: Skriv inn et uttrykk som inneholder flere operatorer\n");
+	*/
+	Output::message("Kalkulator: Skriv inn et matematisk uttrykk:\n");
 	Oppgave3();
 
 	Output::message("Press enter to get a beer...\n");
