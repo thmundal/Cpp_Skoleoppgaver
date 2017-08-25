@@ -17,4 +17,5 @@ public:
 	void append_char(char* c, char* _operator);
 	bool has_children();
 	double calculate();
+	~ExpressionGroup();
 };
