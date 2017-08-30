@@ -29,9 +29,14 @@ double doOperation(char op, double a, double b) {
 	case '+': _op = std::plus<double>(); break;
 	case '-': _op = std::minus<double>(); break;
 	case '*': _op = std::multiplies<double>(); break;
-	case '/': _op = std::divides<double>(); break;
-	case '^': _op = [](double a, double b) { return pow(a, b); }; break;
-	case '%': return (double) ((int) a % (int) b);
+	case '/': 
+		_op = std::divides<double>(); 
+		// cannot divide by negative numbers....
+	break;
+	case '^': 
+		_op = [](double a, double b) { return pow(a, b); }; 
+	break;
+	//case '%': return (double)((int)a % (int)b); break;
 	//case 's': _op = [](double a, double b) { return sin(b); }; break;
 	//case 'c': _op = [](double a, double b) { return cos(b); }; break;
 	//case 'p': _op = [pi](double a, double b) { return pi; }; break;
@@ -147,7 +152,6 @@ double ParseExpression(std::string input) {
 	}
 
 	
-	// Todo: Implement support for exponents
 	char last_operator = '+';
 	for (int i = 0; i<operators.size(); i++) {
 		if (operators[i] == '^') {
@@ -155,12 +159,8 @@ double ParseExpression(std::string input) {
 			numbers[i] = 1;
 			numbers[i + 1] = sum;
 
-			if (last_operator == '*') {
-				operators[i] = '*';
-			}
-			else {
-				operators[i] = '/';
-			}
+			// Has to ovrrride operators here to keep track of what opertor to use with the result
+			operators[i] = last_operator;
 		}
 		last_operator = operators[i];
 	}
