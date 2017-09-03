@@ -156,8 +156,12 @@ double ParseExpression(std::string input) {
 	for (int i = 0; i<operators.size(); i++) {
 		if (operators[i] == '^') {
 			double sum = doOperation(operators[i], numbers[i], numbers[i + 1]);
-			numbers[i] = 1;
 			numbers[i + 1] = sum;
+
+			if (last_operator == '*' || last_operator == '/')
+				numbers[i] = 1;
+			else
+				numbers[i] = 0;
 
 			// Has to ovrrride operators here to keep track of what opertor to use with the result
 			operators[i] = last_operator;
