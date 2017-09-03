@@ -10,14 +10,6 @@
 
 double ParseExpression(std::string in);
 
-bool is_operator(char op) {
-	const std::string valid = "+-*/";
-	for (char c : valid) {
-		if (op == c) return true;
-	}
-	return false;
-}
-
 double doOperation(char op, double a, double b) {
 	std::function<double(double, double)> _op;
 
@@ -26,16 +18,13 @@ double doOperation(char op, double a, double b) {
 	//https://stackoverflow.com/a/10424311
 
 	switch (op) {
-	case '+': _op = std::plus<double>(); break;
-	case '-': _op = std::minus<double>(); break;
-	case '*': _op = std::multiplies<double>(); break;
-	case '/': 
-		_op = std::divides<double>(); 
-		// cannot divide by negative numbers....
-	break;
-	case '^': 
-		_op = [](double a, double b) { return pow(a, b); }; 
-	break;
+	case '+': _op = std::plus<double>();		break;
+	case '-': _op = std::minus<double>();		break;
+	case '*': _op = std::multiplies<double>();	break;
+	case '/': _op = std::divides<double>();		break;
+	case '^': _op = [](double a, double b) { return pow(a, b); }; break;
+
+	// WIP Implementations, commented because of conflicts with order of operations
 	//case '%': return (double)((int)a % (int)b); break;
 	//case 's': _op = [](double a, double b) { return sin(b); }; break;
 	//case 'c': _op = [](double a, double b) { return cos(b); }; break;
@@ -58,9 +47,6 @@ double make_number(std::vector<double> c, int decimal_point = 0) {
 	}
 	return n;
 }
-
-
-/*---------------------- PARATHESES GROUPING TEST ------------------------------*/
 
 std::string make_groups(std::string input) {
 	std::vector<ExpressionGroup> groups;
@@ -97,9 +83,6 @@ std::string make_groups(std::string input) {
 
 	return _root.expression;
 }
-/*---------------------- PARATHESES GROUPING TEST END ------------------------------*/
-
-
 
 double ParseExpression(std::string input) {
 	std::vector<char> operators;
@@ -110,7 +93,7 @@ double ParseExpression(std::string input) {
 	bool decimal = false;
 	double decimal_sum = 0;
 	int decimal_points = 0;
-	double sum = 0; // Bug here if the first expression is a multiplicative (0 * x) AND if there are paranteses
+	double sum = 0;
 
 	for (int i = 0; i < size; i++) {
 		char key = input[i];
@@ -123,15 +106,12 @@ double ParseExpression(std::string input) {
 			decimal = true;
 			continue;
 		}
-		if (key > 47 && key < 58) // Key is pointing to a number in the ACSII table
-		{
+		if (key > 47 && key < 58) { // Key is pointing to a number in the ACSII table
 			if (decimal) {
 				decimal_points++;
 			}
 
 			tmp_numbers.push_back(key - 48);
-
-			//std::cout << key - 48;
 		}
 		else {
 			// Fix the numbers
@@ -144,7 +124,6 @@ double ParseExpression(std::string input) {
 
 			// Key is not pointing to a number, assume operator
 			char cOperator = char(key);
-			//std::cout << cOperator;
 
 			operators.push_back(cOperator);
 		}
@@ -225,7 +204,6 @@ void Oppgave3() {
 
 	sInput += "=";
 
-	//std::cout << std::endl << "Evaluer uttrykket: " << sInput << std::endl;
 	double sum = ParseExpression(make_groups(std::string(sInput)));
 
 	std::cout << std::endl << "Svaret er " << sInput << sum << std::endl;
@@ -246,6 +224,7 @@ int main(void)
 	// 27 = Escape
 	char esc = 0;
 	while (esc != 27 && esc != 120) {
+		system("cls");
 		Output::message("Kalkulator: Skriv inn et matematisk uttrykk:\n");
 		Oppgave3();
 		Output::message("\n\nTrykk enter for å fortsette, skriv inn x for å avslutte\n\n");
