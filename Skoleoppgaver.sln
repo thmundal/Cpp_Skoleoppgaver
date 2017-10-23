@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Calculator", "Calculator\Calculator.vcxproj", "{EEE84E64-BC23-40B7-B10E-6D654BF26017}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BibliotekOppgave", "..\BibliotekOppgave\BibliotekOppgave\BibliotekOppgave.vcxproj", "{F55D76BE-AD83-4022-B0D6-3AE4B8CD2E74}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BibliotekOppgave", "BibliotekOppgave\BibliotekOppgave.vcxproj", "{F55D76BE-AD83-4022-B0D6-3AE4B8CD2E74}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
