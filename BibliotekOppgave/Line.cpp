@@ -12,9 +12,8 @@ namespace poly {
 	}
 
 	void Line::output() {
-		std::cout << "En linje satt opp av ";
+		std::cout << "En linje satt opp av " << std::endl;
 		points[0].output();
-		std::cout << " og ";
 		points[1].output();
 		std::cout << std::endl;
 	}
