@@ -3,8 +3,8 @@
 
 namespace poly {
 	Line::Line(Point a, Point b) {
-		points[0] = a;
-		points[1] = b;
+		points.push_back(a);
+		points.push_back(b);
 	}
 
 	Line::Line() {

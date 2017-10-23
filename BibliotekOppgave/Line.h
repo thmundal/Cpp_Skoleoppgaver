@@ -1,12 +1,14 @@
 #pragma once
 #include "Point.h"
 #include <iostream>
+#include <vector>
 
 namespace poly {
 	class Line {
 	private:
 	public:
-		Point points[2];
+		std::vector<Point> points;
+
 		Line(Point, Point);
 		Line();
 		friend Line operator+(Point& a, Point& b);
