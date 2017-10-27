@@ -13,14 +13,12 @@ int main() {
 	Point point4 = Point(20, 30, 140);
 
 	Line line1 = point1 + point2;
+	Line line2 = Line(Point(10, 10, -50), Point(10, 0, 32));
 
 	Polygon polygon1 = line1 + point3;
-
-	Line line2 = Line(Point(10, 10, -50), Point(10, 0, 32));
 	Polygon polygon2 = line1 + line2;
-
-	Polygon p1_cpy = polygon1;
-	Polygon polygon3 = p1_cpy + polygon2 + point4;
+	Polygon polygon3 = polygon1 + polygon2 + point4;
+	Polygon polygon4 = polygon1 + line2;
 
 	std::cout << "Settet med punkter, linjer og polygoner er:" << std::endl;
 	
@@ -54,6 +52,9 @@ int main() {
 
 	std::cout << "Polygon3 (polygon1 + polygon2 + point4)" << std::endl;
 	polygon3.output();
+
+	std::cout << "Polygon4 (polygon1 + line2)" << std::endl;
+	polygon4.output();
 
 	std::wcout << L"Trykk enter for " << char(134) << " avslutte";
 	
