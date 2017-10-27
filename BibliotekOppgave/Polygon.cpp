@@ -43,13 +43,20 @@ namespace poly {
 			});
 	}
 
+	Polygon operator+(Polygon a, Line b) {
+		std::vector<Point> new_points = a.points;
+		new_points.push_back(b.points.at(0));
+		new_points.push_back(b.points.at(1));
+		return Polygon(new_points);
+	}
+
 	Polygon Polygon::operator+(Polygon& b) {
-		std::vector<Point> points;
+		std::vector<Point> points = this->points;
 
 		for (Point p : b.points) {
-			this->points.push_back(p);
+			points.push_back(p);
 		}
 
-		return *this;
+		return Polygon(points);
 	}
 }

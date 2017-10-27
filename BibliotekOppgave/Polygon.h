@@ -11,6 +11,7 @@ namespace poly {
 		friend Polygon operator+(Polygon& a, Point& p);
 		friend Polygon operator+(Line a, Point b);
 		friend Polygon operator+(Line a, Line b);
+		friend Polygon operator+(Polygon a, Line b);
 		Polygon operator+(Polygon& b);
 		void output();
 	private:
